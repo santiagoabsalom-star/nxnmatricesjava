@@ -14,12 +14,13 @@ import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 public class MatricesController implements Initializable {
     @FXML
     HBox root;
     int maxRows=50,maxCols=50;
-
+    Button solveMatriz= new Button("Solve");
     GridPane grid = new GridPane();
     SmartGrid smartGrid= new SmartGrid(grid, 50, 50);
     Button addColumns = new Button("aniadir columnas ");
@@ -27,9 +28,10 @@ public class MatricesController implements Initializable {
     Button reset = new Button("reset");
     Button deleteRows = new Button("eliminar filas");
     VBox vbox = new VBox();
-    Text text = new Text("Negrura de mierda la connnn");
+    Text text = new Text("negrura de mierda la connnn");
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         vbox.setPadding(new Insets(10, 10, 10, 10));
 
         vbox.setSpacing(10);
@@ -37,6 +39,7 @@ public class MatricesController implements Initializable {
         vbox.getChildren().add(addRows);
         vbox.getChildren().add(text);
         vbox.getChildren().add(reset);
+        vbox.getChildren().add(solveMatriz);
         grid.setPadding(new Insets(100));
         grid.setHgap(10);
         grid.setVgap(10);
@@ -69,6 +72,14 @@ public class MatricesController implements Initializable {
             addColumnsToGrid();
 
         });
+        solveMatriz.setOnAction(event -> {
+            if(rows==0 || cols==0){
+                text.setText("aniade filas o columnas para resolver");
+            }
+            else{
+                solveMatriz();
+            }
+        });
         reset.setOnAction(event ->reset());
         vbox.getChildren().add(smartGrid.grid);
         root.getChildren().add(vbox);
@@ -80,10 +91,8 @@ public class MatricesController implements Initializable {
     }
     public void reset(){
         smartGrid.clear();
-
         rows=0;
         cols=0;
-        System.out.flush();
     }
     int rows=0;
     int cols=0;
@@ -128,19 +137,41 @@ public class MatricesController implements Initializable {
 
 
 //obtener los x y z .... n
-    public void getTextFromGrid(){
-        for (Node node : smartGrid.grid.getChildren()) {
-            if (node instanceof TextField textField) {
-                String strTextField = textField.getText();
-                if(strTextField == null || strTextField.isBlank()){
-                    text.setText("debe ingresar todos los valores");
-                }
+public void solveMatriz(){
+
+    int x = 0;
+    //loop principal que se encarga de cambiar de pivote
+    for(int i=0; i<rows;i++){
+System.out.println("rows: "+i);
+        //loop que se encarga de recorrer las x1,x2,x3....,x
+        for(int j=0; j<cols;j++){
+            System.out.println("cols: "+j);
+
+            //hacer simple resta con pivote a la fila seleccionada: (-1)f1+f2 sobre f2
+
+            //hacer resta "compleja",  con pivote a la fila seleccionada, es decir:
+            //  ((-b/a)*a)+b=0
 
 
-
-            }
         }
 
+    }
+}
+    public int getIntFromGrid(int row, int col){
+        Node node= smartGrid.get(row, col);
+        System.out.println(node);
+        if(node instanceof TextField){
+
+            String num= ((TextField) node).getText();
+            if(!num.isEmpty()) {
+                return Integer.parseInt(num);
+            }
+            else{
+                text.setText("no puede ser nulo");
+                return 0;
+            }
+        }
+    throw new IllegalArgumentException();
     }
 
 
@@ -166,7 +197,7 @@ public class MatricesController implements Initializable {
             }
         }
         for (int i = 0; i < cols; i++) {
-            ;
+
             for (int j = 0; j <= rows; j++) {
                 if (smartGrid.isEmpty(i, j)) {
                     ;
